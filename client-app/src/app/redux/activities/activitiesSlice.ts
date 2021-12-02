@@ -8,7 +8,8 @@ import selectedActivity from "../../../features/activities/form/ActivityForm"
 type Status = "idle" | "loading" | "failed" | "success";
 
 export interface activitiesState {
-  value: Activity[];
+  value: Activity;
+
   status: Status;
 
   createStatus: Status;
@@ -16,13 +17,21 @@ export interface activitiesState {
   updateStatus: Status;
 }
 
-const initialState: activitiesState = {
-  value: [],
+const initialState : activitiesState = {
+  value : {
+    id : '',
+    title: '',
+    category: '',
+    description: '',
+    date: '',
+    city: '',
+    venue: '',
+},
   status: "idle",
 
   createStatus: "idle",
   deleteStatus: "idle",
-  updateStatus: "idle",
+  updateStatus: "idle"
 };
 
 export const GetActivities = createAsyncThunk("activities/fetchactivities", async () => {
@@ -58,7 +67,7 @@ export const activitieSlice = createSlice({
     builder
 
       /* -------------------------------------------------------------------------- */
-      /*                                  GET activities                                 */
+      /*                                  GET activities                            */
       /* -------------------------------------------------------------------------- */
 
       .addCase(GetActivities.pending, (state) => {
@@ -73,63 +82,61 @@ export const activitieSlice = createSlice({
       })
 
       /* -------------------------------------------------------------------------- */
-      /*                                  ADD activities                                 */
+      /*                                  ADD activities                            */
       /* -------------------------------------------------------------------------- */
 
-      .addCase(addActivities.pending, (state) => {
-        state.createStatus = "loading";
-      })
-      .addCase(addActivities.fulfilled, (state, action: any) => {
-        state.createStatus = "success";
-        state.value = [action.payload, ...state.value];
-        state.value;
-      })
-      .addCase(addActivities.rejected, (state) => {
-        state.createStatus = "failed";
-      })
+      // .addCase(addActivities.pending, (state) => {
+      //   state.createStatus = "loading";
+      // })
+      // .addCase(addActivities.fulfilled, (state, action: any) => {
+      //   state.createStatus = "success";
+      //   state.value = [action.payload, ...state.value];
+      // })
+      // .addCase(addActivities.rejected, (state) => {
+      //   state.createStatus = "failed";
+      // })
 
       /* -------------------------------------------------------------------------- */
-      /*                                DELETE activities                                */
+      /*                                DELETE activities                           */
       /* -------------------------------------------------------------------------- */
 
-      .addCase(deleteActivities.pending, (state) => {
-        state.deleteStatus = "loading";
-      })
-      .addCase(deleteActivities.fulfilled, (state, action: any) => {
-        state.deleteStatus = "success";
-        state.value = state.value.filter((u) => u.id !== action.payload);
-        state.value;
-      })
-      .addCase(deleteActivities.rejected, (state) => {
-        state.deleteStatus = "failed";
-      })
+      // .addCase(deleteActivities.pending, (state) => {
+      //   state.deleteStatus = "loading";
+      // })
+      // .addCase(deleteActivities.fulfilled, (state, action: any) => {
+      //   state.deleteStatus = "success";
+      //   state.value = state.value.filter((u) => u.id !== action.payload);
+      // })
+      // .addCase(deleteActivities.rejected, (state) => {
+      //   state.deleteStatus = "failed";
+      // })
 
       /* -------------------------------------------------------------------------- */
-      /*                                  EDIT activities                                 */
+      /*                                  EDIT activities                           */
       /* -------------------------------------------------------------------------- */
 
-      .addCase(updateActivities.pending, (state) => {
-        state.updateStatus = "loading";
-      })
-      .addCase(updateActivities.fulfilled, (state, action: any) => {
-        state.updateStatus = "success";
+      // .addCase(updateActivities.pending, (state) => {
+      //   state.updateStatus = "loading";
+      // })
+      // .addCase(updateActivities.fulfilled, (state, action: any) => {
+      //   state.updateStatus = "success";
 
-        state.value.forEach((u) => {
-          if (u.id === action.payload.id) {
-            const { title, date, description, category, city, venue } = action.payload;
+      //   state.value.forEach((u) => {
+      //     if (u.id === action.payload.id) {
+      //       const { title, date, description, category, city, venue } = action.payload;
 
-            u.title = title;
-            u.date = date;
-            u.description = description;
-            u.category = category;
-            u.city = city;
-            u.venue = venue;
-          }
-        });
-      })
-      .addCase(updateActivities.rejected, (state) => {
-        state.updateStatus = "failed";
-      });
+      //       u.title = title;
+      //       u.date = date;
+      //       u.description = description;
+      //       u.category = category;
+      //       u.city = city;
+      //       u.venue = venue;
+      //     }
+      //   });
+      // })
+      // .addCase(updateActivities.rejected, (state) => {
+      //   state.updateStatus = "failed";
+      // });
   },
 });
 

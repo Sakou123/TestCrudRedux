@@ -3,14 +3,10 @@ import agent from "../../app/API/agent";
 import { Activity } from "../../app/models/activity";
 
 export function fetchActivities() {
-  return new Promise<{ data: any }>((resolve, reject) => { 
-    agent.Activities.list().then(response => {
-      let activities : Activity[] = []
-      response.forEach(activity => {
-        activity.date = activity.date.split('T')[0];
-        activities.push(activity);
-      })
-    });
+  return new Promise( (resolve, reject) => {
+
+    agent.Activities.list()
+    .then((res: any) => resolve(res.data))
   });
 }
 
@@ -20,8 +16,8 @@ export function fetchActivities() {
         .post("/api/activities", activities)
         .then((res: any) => resolve(res.data))
         .catch((err) => reject(err));
-    });
-  }
+      });
+    }
 
   export function removeActivities(activitiesId: number) {
     return new Promise<number>((resolve, reject) => {
@@ -40,4 +36,3 @@ export function fetchActivities() {
         .catch((err) => reject(err));
     });
   }
-
