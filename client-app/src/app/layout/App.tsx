@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
@@ -11,7 +11,7 @@ import LoadingComponent from './LoadingComponent';
 import { GetActivities } from '../redux/activities/activitiesSlice';
 // import TestSakou from '../../features/activities/dashboard/TestSakou';
 
-
+import {selectActivitiesRedux} from '../redux/activities/activitiesSlice'
 
 
 function App() {
@@ -22,9 +22,14 @@ function App() {
   const [submit, setSubmit] = useState(false);
 
   const dispatch = useDispatch();
-
+  const activ = useSelector(selectActivitiesRedux)
 
   useEffect(() => {
+
+    console.log("wow")
+    console.log(activ)
+
+
     dispatch(GetActivities())
     setActivities(activities);
     setLoading(false);

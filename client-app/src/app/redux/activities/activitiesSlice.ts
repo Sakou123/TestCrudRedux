@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { Activity } from "../../models/activity";
 import { RootState } from "../store";
 import { fetchActivities, createActivities, removeActivities, patchActivities } from "../../../features/services/activities.service";
-import selectedActivity from "../../../features/activities/form/ActivityForm"
 
 type Status = "idle" | "loading" | "failed" | "success";
 
@@ -142,6 +141,6 @@ export const activitieSlice = createSlice({
 
 export const { resetEditStatus } = activitieSlice.actions;
 
-export const selectactivities = (state: RootState) => state.activities;
+export const selectActivitiesRedux = (state: RootState) => state.activities;
 
 export default activitieSlice.reducer;

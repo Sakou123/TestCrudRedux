@@ -3,19 +3,23 @@ import agent from "../../app/API/agent";
 import { Activity } from "../../app/models/activity";
 
 export function fetchActivities() {
-  return new Promise( (resolve, reject) => {
-
-    agent.Activities.list()
-    .then((res: any) => resolve(res.data))
+  return new Promise<{ data: any }>( (resolve, reject) => {
+    agent.Activities.list().then(response => {
+      let activities : Activity[] = []
+      response.forEach(activity => {
+        activity.date = activity.date.split('T')[0];
+        activities.push(activity);
+      })
+      console.log(activities)
+    })
   });
 }
 
   export function createActivities(activities: Activity) {
-    return new Promise<{ data: any }>((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       axios
         .post("/api/activities", activities)
-        .then((res: any) => resolve(res.data))
-        .catch((err) => reject(err));
+       
       });
     }
 
