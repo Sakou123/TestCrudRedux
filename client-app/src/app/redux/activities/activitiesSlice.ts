@@ -5,7 +5,7 @@ import { RootState } from "../store";
 import agent from "../../API/agent";
 
 type Status = "idle" | "loading" | "failed" | "success";
-const toto : Activity[] = []
+const ArrayRedux : Activity[] = []
 
 export interface activitiesState {
   value: Activity[];
@@ -18,7 +18,7 @@ export interface activitiesState {
 }
 
 const initialState : activitiesState = {
-  value : toto,
+  value : ArrayRedux,
   status: "idle",
 
   createStatus: "idle",
@@ -27,9 +27,9 @@ const initialState : activitiesState = {
 };
 
 export const getActivities = createAsyncThunk("activities/fetchactivities", async () => {
-      const toto = await agent.Activities.list()
+      const response = await agent.Activities.list()
 
-      return toto;
+      return response;
 });
 
 export const addActivities = createAsyncThunk("activities/addactivities", async (activities: Activity) => {
