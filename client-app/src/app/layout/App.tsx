@@ -8,14 +8,11 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import {v4 as uuid} from 'uuid';
 import agent from '../API/agent';
 import LoadingComponent from './LoadingComponent';
-import { GetActivities } from '../redux/activities/activitiesSlice';
+import {selectActivitiesRedux, getActivities } from '../redux/activities/activitiesSlice';
 // import TestSakou from '../../features/activities/dashboard/TestSakou';
 
-import {selectActivitiesRedux} from '../redux/activities/activitiesSlice'
-
-
 function App() {
-  const [activities, setActivities] = useState<Activity[]>([])
+  const [activities, setActivities] = useState<any[]>([])
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -24,14 +21,8 @@ function App() {
   const dispatch = useDispatch();
   const activ = useSelector(selectActivitiesRedux)
 
-  useEffect(() => {
-
-    console.log("wow")
-    console.log(activ)
-
-
-    dispatch(GetActivities())
-    setActivities(activities);
+  useEffect(() => {   
+    dispatch(getActivities())
     setLoading(false);
   }, [dispatch]);
 
@@ -103,7 +94,7 @@ function App() {
       
 
         <ActivityDashboard 
-          activities={activities}
+          activities={activ.value}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
           cancelSelectActivity={handleCancelSelectActivity}

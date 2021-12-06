@@ -9,7 +9,7 @@ namespace API.Controllers{
     public class ActivitiesController : BaseApiControllers{
         [HttpGet]
 
-        public async Task<ActionResult<List<Activity>>> GetActivities(CancellationToken ct){
+        public async Task<ActionResult<List<Activity>>> getActivities(CancellationToken ct){
             return await Mediator.Send(new List.Query(), ct);
         }
 

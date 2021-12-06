@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { Activity } from "../../models/activity";
+import { Activity} from "../../models/activity";
 import { RootState } from "../store";
-import { fetchActivities, createActivities, removeActivities, patchActivities } from "../../../features/services/activities.service";
+import agent from "../../API/agent";
 
 type Status = "idle" | "loading" | "failed" | "success";
+const toto : Activity[] = []
 
 export interface activitiesState {
-  value: Activity;
+  value: Activity[];
 
   status: Status;
 
@@ -17,15 +18,7 @@ export interface activitiesState {
 }
 
 const initialState : activitiesState = {
-  value : {
-    id : '',
-    title: '',
-    category: '',
-    description: '',
-    date: '',
-    city: '',
-    venue: '',
-},
+  value : toto,
   status: "idle",
 
   createStatus: "idle",
@@ -33,24 +26,25 @@ const initialState : activitiesState = {
   updateStatus: "idle"
 };
 
-export const GetActivities = createAsyncThunk("activities/fetchactivities", async () => {
-  const response = await fetchActivities();
-  return response;
+export const getActivities = createAsyncThunk("activities/fetchactivities", async () => {
+      const toto = await agent.Activities.list()
+
+      return toto;
 });
 
 export const addActivities = createAsyncThunk("activities/addactivities", async (activities: Activity) => {
-  const response = await createActivities(activities);
-  return response;
+  // const response = await createActivities(activities);
+  // return response;
 });
 
 export const deleteActivities = createAsyncThunk("activities/deleteactivities", async (activitiesId: number) => {
-  const response = await removeActivities(activitiesId);
-  return response;
+  // const response = await removeActivities(activitiesId);
+  // return response;
 });
 
 export const updateActivities = createAsyncThunk("activities/updateactivities", async (activities: Activity) => {
-  const response = await patchActivities(activities);
-  return response;
+  // const response = await patchActivities(activities);
+  // return response;
 });
 
 export const activitieSlice = createSlice({
@@ -69,14 +63,15 @@ export const activitieSlice = createSlice({
       /*                                  GET activities                            */
       /* -------------------------------------------------------------------------- */
 
-      .addCase(GetActivities.pending, (state) => {
+      .addCase(getActivities.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(GetActivities.fulfilled, (state, action: any) => {
+      .addCase(getActivities.fulfilled, (state, action: any) => {
         state.status = "idle";
         state.value = action.payload;
+        // console.log("oui: ",action.payload)
       })
-      .addCase(GetActivities.rejected, (state) => {
+      .addCase(getActivities.rejected, (state) => {
         state.status = "failed";
       })
 
