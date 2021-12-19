@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
 import { Activity} from "../../models/activity";
 import { RootState } from "../store";
+import {v4 as uuid} from 'uuid';
 import agent from "../../API/agent";
+
 
 type Status = "idle" | "loading" | "failed" | "success";
 const ArrayRedux : Activity[] = []
@@ -15,6 +17,7 @@ export interface activitiesState {
   createStatus: Status;
   deleteStatus: Status;
   updateStatus: Status;
+  loading: boolean;
 }
 
 const initialState : activitiesState = {
@@ -23,19 +26,32 @@ const initialState : activitiesState = {
 
   createStatus: "idle",
   deleteStatus: "idle",
-  updateStatus: "idle"
+  updateStatus: "idle",
+  loading: true
 };
 
-export const getActivities = createAsyncThunk("activities/fetchactivities", async () => {
-      const response = await agent.Activities.list()
+  const [activities, setActivities] = useState<any[]>([])
+  const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
+  const [editMode, setEditMode] = useState(false);
+  const [submit, setSubmit] = useState(false);
 
+export const getActivities = createAsyncThunk("activities/fetchactivities", async () => {
+      const response = agent.Activities.list()
       return response;
 });
 
-export const addActivities = createAsyncThunk("activities/addactivities", async (activities: Activity) => {
-  // const response = await createActivities(activities);
-  // return response;
-});
+export const addActivities = createAsyncThunk("activities/addactivities", async (activity: Activity) => {
+  const response =  (activity: Activity) => {
+    activity.id = uuid();
+    agent.Activities.create(activity).then(() =>{
+      setActivities([...activities, activity]);
+      setSelectedActivity(activity);
+      setEditMode(false);
+      setSubmit(false);
+  })
+}
+return response;
+})
 
 export const deleteActivities = createAsyncThunk("activities/deleteactivities", async (activitiesId: number) => {
   // const response = await removeActivities(activitiesId);
@@ -69,6 +85,7 @@ export const activitieSlice = createSlice({
       .addCase(getActivities.fulfilled, (state, action: any) => {
         state.status = "idle";
         state.value = action.payload;
+        state.loading = false;
         // console.log("oui: ",action.payload)
       })
       .addCase(getActivities.rejected, (state) => {

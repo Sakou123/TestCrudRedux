@@ -8,14 +8,13 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import {v4 as uuid} from 'uuid';
 import agent from '../API/agent';
 import LoadingComponent from './LoadingComponent';
-import {selectActivitiesRedux, getActivities } from '../redux/activities/activitiesSlice';
+import {selectActivitiesRedux, getActivities, addActivities } from '../redux/activities/activitiesSlice';
 // import TestSakou from '../../features/activities/dashboard/TestSakou';
 
 function App() {
   const [activities, setActivities] = useState<any[]>([])
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submit, setSubmit] = useState(false);
 
   const dispatch = useDispatch();
@@ -23,19 +22,18 @@ function App() {
 
   useEffect(() => {   
     dispatch(getActivities())
-    setLoading(false);
   }, [dispatch]);
 
   // useEffect(() => {
-  //   agent.Activities.list().then(response => {
-  //     let activities : Activity[] = []
-  //     response.forEach(activity => {
-  //       activity.date = activity.date.split('T')[0];
-  //       activities.push(activity);
-  //     })
-  //     setActivities(activities);
-  //     setLoading(false);
-  //   })
+    // agent.Activities.list().then(response => {
+    //   let activities : Activity[] = []
+    //   response.forEach(activity => {
+    //     activity.date = activity.date.split('T')[0];
+    //     activities.push(activity);
+    //   })
+    //   setActivities(activities);
+    //   setLoading(false);
+    // })
   // }, [])
 
   function handleSelectActivity(id : string){
@@ -64,14 +62,19 @@ function App() {
         setEditMode(false);
         setSubmit(false);
       })
+
     }else{
       activity.id = uuid();
-      agent.Activities.create(activity).then(() =>{
-        setActivities([...activities, activity]);
-        setSelectedActivity(activity);
-        setEditMode(false);
-        setSubmit(false);
-      })
+      dispatch(addActivities(activity))
+      
+
+      // activity.id = uuid();
+      // agent.Activities.create(activity).then(() =>{
+      //   setActivities([...activities, activity]);
+      //   setSelectedActivity(activity);
+      //   setEditMode(false);
+      //   setSubmit(false);
+      // })
     }
   }
 
@@ -83,15 +86,12 @@ function App() {
     })
   }
 
-  if(loading) return <LoadingComponent content='Loading app' />
+  if(activ.loading) return <LoadingComponent content='Loading app' />
 
   return (
     <>
       <NavBar openForm={handleFormOpen} />
       <Container style={{marginTop: '7em'}}>
-
-
-      
 
         <ActivityDashboard 
           activities={activ.value}
